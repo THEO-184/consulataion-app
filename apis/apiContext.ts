@@ -1,7 +1,7 @@
 import type { QueryKey, UseQueryOptions } from "@tanstack/react-query";
 import { QueryOperation } from "./apiComponents";
 
-const token = window ? window.localStorage.getItem("token") : undefined;
+const token = localStorage?.getItem("token") ?? undefined;
 
 export type ApiContext = {
 	fetcherOptions: {

@@ -9,6 +9,7 @@ import type * as Fetcher from "./apiFetcher";
 import { apiFetch } from "./apiFetcher";
 import type * as Schemas from "./apiSchemas";
 import { PatientLoginResponse } from "@/interfaces/patient.interface";
+import { OfficerLoginResponse } from "@/interfaces/officer.interface";
 
 export type AppControllerGetHelloError = Fetcher.ErrorWrapper<undefined>;
 
@@ -321,7 +322,7 @@ export const fetchAuthControllerOfficerLogin = (
 	signal?: AbortSignal
 ) =>
 	apiFetch<
-		undefined,
+		OfficerLoginResponse,
 		AuthControllerOfficerLoginError,
 		Schemas.LoginOfficerDto,
 		{},
@@ -332,7 +333,7 @@ export const fetchAuthControllerOfficerLogin = (
 export const useAuthControllerOfficerLogin = (
 	options?: Omit<
 		reactQuery.UseMutationOptions<
-			undefined,
+			OfficerLoginResponse,
 			AuthControllerOfficerLoginError,
 			AuthControllerOfficerLoginVariables
 		>,
@@ -341,7 +342,7 @@ export const useAuthControllerOfficerLogin = (
 ) => {
 	const { fetcherOptions } = useApiContext();
 	return reactQuery.useMutation<
-		undefined,
+		OfficerLoginResponse,
 		AuthControllerOfficerLoginError,
 		AuthControllerOfficerLoginVariables
 	>({

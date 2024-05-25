@@ -1,4 +1,4 @@
-import ViewPatientConsultations from "@/Features/ViewPatientConsultations";
+import ViewPatientConsultations from "@/Features/Patient/ViewPatientConsultations";
 import React from "react";
 
 const Patient = ({ params }: { params: { id: string } }) => {

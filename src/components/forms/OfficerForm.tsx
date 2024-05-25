@@ -23,6 +23,8 @@ import {
 
 import { z } from "zod";
 import { Button } from "../ui/button";
+import { useAuthControllerOfficerLogin } from "../../../apis/apiComponents";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
 	password: z.string().min(10, "minimum 10 characters required"),
@@ -30,9 +32,12 @@ const formSchema = z.object({
 });
 
 export function OfficerForm() {
+	const router = useRouter();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 	});
+
+	const { mutate: login } = useAuthControllerOfficerLogin();
 
 	const {
 		formState: { errors },
@@ -45,6 +50,24 @@ export function OfficerForm() {
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
 		console.log(values);
+		login(
+			{
+				body: { email: values.email, password: values.password },
+			},
+			{
+				onSuccess(data, variables, context) {
+					console.log("data", data);
+					localStorage.setItem("token", data.token);
+					window.alert("login succesfull");
+
+					window.location.href = `/officer/${data.officer.id}`;
+				},
+				onError(error, variables, context) {
+					window.alert("Patient Id and/or email incorrect");
+					console.log("error", error);
+				},
+			}
+		);
 	}
 
 	return (
@@ -54,9 +77,9 @@ export function OfficerForm() {
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>Patient credentials</DialogTitle>
+					<DialogTitle>Officer credentials</DialogTitle>
 					<DialogDescription>
-						Enter your credentials to view your consultations.
+						Log in as Health Facility Officer
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>

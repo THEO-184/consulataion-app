@@ -16,6 +16,7 @@ export interface Consultation {
 	updatedAt: string;
 	healthcareProvider: HealthcareProvider;
 	officer: Officer;
+	patient: Patient;
 }
 
 export interface HealthcareProvider {
@@ -25,4 +26,13 @@ export interface HealthcareProvider {
 
 export interface Officer {
 	name: string;
+}
+
+export interface Patient {
+	id: number;
+	firstName: string;
+	lastName: string;
+	email: string;
+	createdAt: string;
+	updatedAt: string;
 }

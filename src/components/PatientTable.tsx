@@ -8,82 +8,46 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { TableResponse } from "@/Features/ViewPatientConsultations";
+import { PatientTableResponse } from "@/Features/Patient/ViewPatientConsultations";
 
-const invoices = [
-	{
-		invoice: "INV001",
-		paymentStatus: "Paid",
-		totalAmount: "$250.00",
-		paymentMethod: "Credit Card",
-	},
-	{
-		invoice: "INV002",
-		paymentStatus: "Pending",
-		totalAmount: "$150.00",
-		paymentMethod: "PayPal",
-	},
-	{
-		invoice: "INV003",
-		paymentStatus: "Unpaid",
-		totalAmount: "$350.00",
-		paymentMethod: "Bank Transfer",
-	},
-	{
-		invoice: "INV004",
-		paymentStatus: "Paid",
-		totalAmount: "$450.00",
-		paymentMethod: "Credit Card",
-	},
-	{
-		invoice: "INV005",
-		paymentStatus: "Paid",
-		totalAmount: "$550.00",
-		paymentMethod: "PayPal",
-	},
-	{
-		invoice: "INV006",
-		paymentStatus: "Pending",
-		totalAmount: "$200.00",
-		paymentMethod: "Bank Transfer",
-	},
-	{
-		invoice: "INV007",
-		paymentStatus: "Unpaid",
-		totalAmount: "$300.00",
-		paymentMethod: "Credit Card",
-	},
-];
+interface TableProps<T> {
+	data: T[]; // Array of data objects for the table
+	columns: TableColumn<T>[]; // Array of column definitions
+}
 
-export function PatientTable({ response }: { response: TableResponse[] }) {
+export interface TableColumn<T> {
+	key: keyof T; // Property key of the data object to access the value
+	header: string; // Header text for the column
+	render?: (row: T) => React.ReactNode; // Optional custom rendering function
+}
+
+const CustomTable = <T,>({ columns, data }: TableProps<T>) => {
 	return (
 		<Table>
 			<TableHeader>
 				<TableRow>
-					<TableHead className="text-center">ID</TableHead>
-					<TableHead className="text-center">Date</TableHead>
-					<TableHead className="text-center">Consultation Type</TableHead>
-					<TableHead className="text-center">Medical Condition</TableHead>
-					<TableHead className="text-center">
-						Healthcare Provider Name
-					</TableHead>
-					<TableHead className="text-center">
-						Healthcare Provider Department
-					</TableHead>
+					{columns.map((column) => (
+						<TableHead key={column.header} className="text-center">
+							{column.header}
+						</TableHead>
+					))}
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{response.map((item) => (
-					<TableRow key={item.id}>
-						<TableCell className="font-medium">{item.id}</TableCell>
-						<TableCell>{item.date}</TableCell>
-						<TableCell>{item.consultationType}</TableCell>
-						<TableCell>{item.medicalCondition}</TableCell>
-						<TableCell>{item.healthcareProviderName}</TableCell>
-						<TableCell>{item.healthcareProviderDepartment}</TableCell>
+				{data.map((row, id) => (
+					<TableRow key={id}>
+						{columns.map((column, id) => (
+							<TableCell key={id} className="font-medium">
+								{column.render
+									? column.render(row)
+									: (row[column.key] as React.ReactNode)}
+							</TableCell>
+						))}
 					</TableRow>
 				))}
 			</TableBody>
 		</Table>
 	);
-}
+};
+
+export default CustomTable;

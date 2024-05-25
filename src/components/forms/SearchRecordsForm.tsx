@@ -32,7 +32,7 @@ const formSchema = z.object({
 	email: z.string().email(),
 });
 
-export function PatientForm() {
+export function SearchRecordsForm() {
 	const router = useRouter();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -75,7 +75,7 @@ export function PatientForm() {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button variant="outline">Sign In As Patient</Button>
+				<Button variant="default">Search Records</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
