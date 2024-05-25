@@ -8,7 +8,6 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { PatientTableResponse } from "@/Features/Patient/ViewPatientConsultations";
 
 interface TableProps<T> {
 	data: T[]; // Array of data objects for the table

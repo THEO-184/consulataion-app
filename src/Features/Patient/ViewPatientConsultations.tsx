@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ConsultationResponse } from "@/interfaces/consultations.interface";
 import { formatDate, formatTime } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import CustomTable, { TableColumn } from "@/components/PatientTable";
+import CustomTable, { TableColumn } from "@/components/CustomTable";
 import { usePatientControllerGetMyConsultation } from "../../../apis/apiComponents";
 
 export interface PatientTableResponse {

@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import {
 	Dialog,
 	DialogContent,
@@ -8,6 +9,14 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,21 +33,46 @@ import {
 
 import { z } from "zod";
 import { Button } from "../ui/button";
-import { useAuthControllerPatientLogin } from "../../../apis/apiComponents";
+import {
+	useAuthControllerPatientLogin,
+	useConsultationControllerGetPatientConsultation,
+	useHealthcareProvidersControllerFindAll,
+} from "../../../apis/apiComponents";
 import { useRouter } from "next/navigation";
+import { HealthCareProviderResponse } from "@/interfaces/healthcare-providers.interface";
+import { ConsultationResponse } from "@/interfaces/consultations.interface";
+import { useState } from "react";
 
-const formSchema = z.object({
-	id: z.coerce.number().gt(0),
-	email: z.string().email(),
+export const SearchConsultationSchema = z.object({
+	consultationType: z.string().optional(),
+	medicalCondition: z.string().optional(),
+	healthcareProviderId: z.coerce.number().optional(),
+	date: z.string().optional(),
+	patientName: z.string().optional(),
 });
 
-export function SearchRecordsForm() {
+export type SearchConsultationPayloadType = z.infer<
+	typeof SearchConsultationSchema
+>;
+
+interface SearchFormProps {
+	setSearchQuery: React.Dispatch<
+		React.SetStateAction<SearchConsultationPayloadType | null>
+	>;
+}
+
+type QueryParamType = {
+	[key: string]: any;
+};
+
+export function SearchRecordsForm({ setSearchQuery }: SearchFormProps) {
 	const router = useRouter();
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const form = useForm<SearchConsultationPayloadType>({
+		resolver: zodResolver(SearchConsultationSchema),
 	});
 
-	const { mutate: login, isPending } = useAuthControllerPatientLogin();
+	const { data, isPending: isFethcingProviders } =
+		useHealthcareProvidersControllerFindAll<HealthCareProviderResponse>({});
 
 	const {
 		formState: { errors },
@@ -47,58 +81,42 @@ export function SearchRecordsForm() {
 	console.log("errors", errors);
 
 	// 2. Define a submit handler.
-	function onSubmit(values: z.infer<typeof formSchema>) {
+	function onSubmit(values: SearchConsultationPayloadType) {
+		const queryParam: QueryParamType = {};
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
-
-		login(
-			{
-				body: { email: values.email, id: values.id },
-			},
-			{
-				onSuccess(data, variables, context) {
-					console.log("data", data);
-					localStorage.setItem("token", data.token);
-
-					window.location.href = `/patient/${data.patient.id}`;
-				},
-				onError(error, variables, context) {
-					window.alert("Patient Id and/or email incorrect");
-					console.log("error", error);
-				},
+		for (const key in values) {
+			if (values[key as keyof SearchConsultationPayloadType]) {
+				queryParam[key] = values[key as keyof SearchConsultationPayloadType];
 			}
-		);
-
+		}
+		setSearchQuery((prev) => ({ ...prev, ...queryParam }));
 		console.log(values);
 	}
 
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button variant="default">Search Records</Button>
+				<Button variant="default">Filter Consultations</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>Patient credentials</DialogTitle>
-					<DialogDescription>
-						Enter your credentials to view your consultations.
-					</DialogDescription>
+					<DialogTitle>Consultation Details</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
 					<form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
 						<FormField
 							control={form.control}
-							name="email"
+							name="consultationType"
 							render={({ field }) => (
 								<FormItem className="">
-									<FormLabel htmlFor="email" className="text-right">
-										Email
+									<FormLabel htmlFor="consultationType" className="text-right">
+										Consultation Type
 									</FormLabel>
 									<FormControl>
 										<Input
-											id="email"
-											type="email"
-											placeholder="example@mail.com"
+											id="consultationType"
+											placeholder="eye screening"
 											{...field}
 										/>
 									</FormControl>
@@ -109,22 +127,93 @@ export function SearchRecordsForm() {
 						/>
 						<FormField
 							control={form.control}
-							name="id"
+							name="medicalCondition"
 							render={({ field }) => (
 								<FormItem className="">
-									<FormLabel htmlFor="id" className="text-right">
-										Patient Id
+									<FormLabel htmlFor="medicalCondition" className="text-right">
+										Medical Condition
 									</FormLabel>
 									<FormControl>
-										<Input id="id" placeholder="" {...field} />
+										<Input id="medicalCondition" placeholder="" {...field} />
 									</FormControl>
 
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
+						<FormField
+							control={form.control}
+							name="date"
+							render={({ field }) => (
+								<FormItem className="">
+									<FormLabel htmlFor="date" className="text-right">
+										Date
+									</FormLabel>
+									<FormControl>
+										<Input type="date" id="date" placeholder="" {...field} />
+									</FormControl>
+
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name="healthcareProviderId"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Healthcare Provider</FormLabel>
+									<Select
+										onValueChange={field.onChange}
+										defaultValue={field.value?.toString()}
+									>
+										<FormControl>
+											<SelectTrigger disabled={!data}>
+												<SelectValue placeholder="Select the health provider" />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											{data?.healthcareProviders?.map((details) => (
+												<SelectItem
+													key={details.id}
+													value={details.id.toString()}
+												>
+													{details.name} - {details.department}
+												</SelectItem>
+											))}
+											<SelectItem value="23">m@example.com</SelectItem>
+											<SelectItem value="34">m@google.com</SelectItem>
+											<SelectItem value="24">m@support.com</SelectItem>
+										</SelectContent>
+									</Select>
+
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<h3 className="my-4 text-black font-medium">Patient Details</h3>
+
+						<FormField
+							control={form.control}
+							name="patientName"
+							render={({ field }) => (
+								<FormItem className="">
+									<FormLabel htmlFor="patientName" className="text-right">
+										Full Name
+									</FormLabel>
+									<FormControl>
+										<Input id="patientName" placeholder="" {...field} />
+									</FormControl>
+
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
 						<DialogFooter>
-							<Button type="submit">Save changes</Button>
+							<Button type="submit">Search</Button>
 						</DialogFooter>
 					</form>
 				</Form>

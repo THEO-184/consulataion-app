@@ -2,7 +2,6 @@
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
@@ -33,14 +32,14 @@ import {
 import { z } from "zod";
 import { Button } from "../ui/button";
 import {
-	useAuthControllerPatientLogin,
 	useConsultationControllerBookConsultation,
 	useHealthcareProvidersControllerFindAll,
 } from "../../../apis/apiComponents";
 import { useRouter } from "next/navigation";
 import { HealthCareProviderResponse } from "@/interfaces/healthcare-providers.interface";
+import { useState } from "react";
 
-const formSchema = z.object({
+export const BookConsultationSchema = z.object({
 	consultationType: z.string(),
 	medicalCondition: z.string(),
 	notes: z.string().optional(),
@@ -52,9 +51,9 @@ const formSchema = z.object({
 });
 
 export function BookConsultationForm() {
-	const router = useRouter();
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const [openModal, setOpenModal] = useState(false);
+	const form = useForm<z.infer<typeof BookConsultationSchema>>({
+		resolver: zodResolver(BookConsultationSchema),
 	});
 
 	const { data, isPending: isFethcingProviders } =
@@ -67,10 +66,8 @@ export function BookConsultationForm() {
 	} = form;
 
 	// 2. Define a submit handler.
-	function onSubmit(values: z.infer<typeof formSchema>) {
+	function onSubmit(values: z.infer<typeof BookConsultationSchema>) {
 		const { firstName, lastName, email, ...consultationInfo } = values;
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
 
 		bookConsultation(
 			{
@@ -85,7 +82,7 @@ export function BookConsultationForm() {
 			},
 			{
 				onSuccess(data, variables, context) {
-					window.location.reload();
+					setOpenModal(false);
 				},
 				onError(error, variables, context) {
 					console.log("error", error);
@@ -97,7 +94,7 @@ export function BookConsultationForm() {
 	}
 
 	return (
-		<Dialog>
+		<Dialog open={openModal} onOpenChange={setOpenModal}>
 			<DialogTrigger asChild>
 				<Button variant="default">Book Consultation</Button>
 			</DialogTrigger>
@@ -168,7 +165,7 @@ export function BookConsultationForm() {
 									<FormLabel>Healthcare Provider</FormLabel>
 									<Select
 										onValueChange={field.onChange}
-										defaultValue={field.value}
+										defaultValue={field.value?.toString()}
 									>
 										<FormControl>
 											<SelectTrigger disabled={!data}>
@@ -184,9 +181,6 @@ export function BookConsultationForm() {
 													{details.name} - {details.department}
 												</SelectItem>
 											))}
-											<SelectItem value="23">m@example.com</SelectItem>
-											<SelectItem value="34">m@google.com</SelectItem>
-											<SelectItem value="24">m@support.com</SelectItem>
 										</SelectContent>
 									</Select>
 
