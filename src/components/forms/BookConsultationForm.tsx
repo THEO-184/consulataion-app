@@ -34,6 +34,7 @@ import { z } from "zod";
 import { Button } from "../ui/button";
 import {
 	useAuthControllerPatientLogin,
+	useConsultationControllerBookConsultation,
 	useHealthcareProvidersControllerFindAll,
 } from "../../../apis/apiComponents";
 import { useRouter } from "next/navigation";
@@ -58,7 +59,8 @@ export function BookConsultationForm() {
 
 	const { data, isPending: isFethcingProviders } =
 		useHealthcareProvidersControllerFindAll<HealthCareProviderResponse>({});
-	const { mutate: login, isPending } = useAuthControllerPatientLogin();
+	const { mutate: bookConsultation, isPending } =
+		useConsultationControllerBookConsultation();
 
 	const {
 		formState: { errors },
@@ -66,8 +68,30 @@ export function BookConsultationForm() {
 
 	// 2. Define a submit handler.
 	function onSubmit(values: z.infer<typeof formSchema>) {
+		const { firstName, lastName, email, ...consultationInfo } = values;
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
+
+		bookConsultation(
+			{
+				body: {
+					...consultationInfo,
+					patient: {
+						firstName,
+						lastName,
+						email,
+					},
+				},
+			},
+			{
+				onSuccess(data, variables, context) {
+					window.location.reload();
+				},
+				onError(error, variables, context) {
+					console.log("error", error);
+				},
+			}
+		);
 
 		console.log(values);
 	}

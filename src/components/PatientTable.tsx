@@ -37,7 +37,7 @@ const CustomTable = <T,>({ columns, data }: TableProps<T>) => {
 				{data.map((row, id) => (
 					<TableRow key={id}>
 						{columns.map((column, id) => (
-							<TableCell key={id} className="font-medium">
+							<TableCell key={id} className="font-medium text-center">
 								{column.render
 									? column.render(row)
 									: (row[column.key] as React.ReactNode)}
