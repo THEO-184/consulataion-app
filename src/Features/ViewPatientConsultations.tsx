@@ -4,8 +4,9 @@ import { usePatientControllerGetMyConsultation } from "../../apis/apiComponents"
 import { ConsultationResponse } from "@/interfaces/consultations.interface";
 import { formatDate, formatTime } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
+import { PatientTable } from "@/components/PatientTable";
 
-interface Response {
+export interface TableResponse {
 	date: string;
 	id: number;
 	consultationType: string;
@@ -15,7 +16,7 @@ interface Response {
 }
 
 const ViewPatientConsultations = () => {
-	const [response, setResponse] = useState<Array<Response>>([]);
+	const [response, setResponse] = useState<Array<TableResponse>>([]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const { isPending, data } =
 		usePatientControllerGetMyConsultation<ConsultationResponse>({});
@@ -75,7 +76,8 @@ const ViewPatientConsultations = () => {
 							onChange={handleSearchConsultation}
 						/>
 					</div>
-					<table className="min-w-full bg-white">
+					<PatientTable response={response} />
+					{/* <table className="min-w-full bg-white">
 						<thead>
 							<tr>
 								<th className="py-2 px-4 bg-gray-200 text-gray-600 font-bold">
@@ -110,7 +112,7 @@ const ViewPatientConsultations = () => {
 								</tr>
 							))}
 						</tbody>
-					</table>
+					</table> */}
 				</div>
 			)}
 		</div>
