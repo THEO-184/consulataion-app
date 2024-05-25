@@ -24,6 +24,8 @@ import {
 
 import { z } from "zod";
 import { Button } from "../ui/button";
+import { useAuthControllerPatientLogin } from "../../../apis/apiComponents";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
 	id: z.coerce.number().gt(0),
@@ -31,20 +33,44 @@ const formSchema = z.object({
 });
 
 export function PatientForm() {
+	const router = useRouter();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 	});
+
+	const { mutate: login, isPending } = useAuthControllerPatientLogin();
 
 	const {
 		formState: { errors },
 	} = form;
 
-	console.log("erros", errors);
+	console.log("errors", errors);
 
 	// 2. Define a submit handler.
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
+
+		login(
+			{
+				body: { email: values.email, id: values.id },
+			},
+			{
+				onSuccess(data, variables, context) {
+					console.log("data", data);
+					localStorage.setItem("token", data.token);
+					window.alert("login succesfull");
+
+					router.push(`/patient/${data.patient.id}`);
+					router.refresh();
+				},
+				onError(error, variables, context) {
+					window.alert("Patient Id and/or email incorrect");
+					console.log("error", error);
+				},
+			}
+		);
+
 		console.log(values);
 	}
 

@@ -50,7 +50,7 @@ export function OfficerForm() {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button variant="outline">Sign In As Patient</Button>
+				<Button variant="outline">Sign In As Health Facility Officer</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
