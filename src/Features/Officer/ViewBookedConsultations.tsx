@@ -17,17 +17,11 @@ interface OfficerTableResponse extends PatientTableResponse {
 	patientName: string;
 	patientEmail: string;
 }
-export const SearchConsultationSchema = z.object({
-	consultationType: z.string().optional(),
-	medicalCondition: z.string().optional(),
-	healthcareProviderId: z.coerce.number().optional(),
-	date: z.string().optional(),
-	patientName: z.string().optional(),
-});
 
 const ViewBookedConsultations = () => {
 	const [searchQuery, setSearchQuery] =
 		useState<SearchConsultationPayloadType | null>(null);
+	console.log("searchQuery", searchQuery);
 	const hasParams = searchQuery && Object.values(searchQuery).length > 0;
 	const { data, isPending } =
 		useConsultationControllerGetPatientConsultation<ConsultationResponse>({

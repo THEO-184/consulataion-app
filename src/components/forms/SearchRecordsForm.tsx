@@ -33,20 +33,14 @@ import {
 
 import { z } from "zod";
 import { Button } from "../ui/button";
-import {
-	useAuthControllerPatientLogin,
-	useConsultationControllerGetPatientConsultation,
-	useHealthcareProvidersControllerFindAll,
-} from "../../../apis/apiComponents";
+import { useHealthcareProvidersControllerFindAll } from "../../../apis/apiComponents";
 import { useRouter } from "next/navigation";
 import { HealthCareProviderResponse } from "@/interfaces/healthcare-providers.interface";
-import { ConsultationResponse } from "@/interfaces/consultations.interface";
-import { useState } from "react";
 
 export const SearchConsultationSchema = z.object({
 	consultationType: z.string().optional(),
 	medicalCondition: z.string().optional(),
-	healthcareProviderId: z.coerce.number().optional(),
+	healthcareProvider: z.string().optional(),
 	date: z.string().optional(),
 	patientName: z.string().optional(),
 });
@@ -66,7 +60,6 @@ type QueryParamType = {
 };
 
 export function SearchRecordsForm({ setSearchQuery }: SearchFormProps) {
-	const router = useRouter();
 	const form = useForm<SearchConsultationPayloadType>({
 		resolver: zodResolver(SearchConsultationSchema),
 	});
@@ -78,20 +71,16 @@ export function SearchRecordsForm({ setSearchQuery }: SearchFormProps) {
 		formState: { errors },
 	} = form;
 
-	console.log("errors", errors);
-
 	// 2. Define a submit handler.
 	function onSubmit(values: SearchConsultationPayloadType) {
 		const queryParam: QueryParamType = {};
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
+
 		for (const key in values) {
 			if (values[key as keyof SearchConsultationPayloadType]) {
 				queryParam[key] = values[key as keyof SearchConsultationPayloadType];
 			}
 		}
 		setSearchQuery((prev) => ({ ...prev, ...queryParam }));
-		console.log(values);
 	}
 
 	return (
@@ -101,7 +90,7 @@ export function SearchRecordsForm({ setSearchQuery }: SearchFormProps) {
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>Consultation Details</DialogTitle>
+					<DialogTitle>Filter consultations by specific fields</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
 					<form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
@@ -160,7 +149,7 @@ export function SearchRecordsForm({ setSearchQuery }: SearchFormProps) {
 
 						<FormField
 							control={form.control}
-							name="healthcareProviderId"
+							name="healthcareProvider"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Healthcare Provider</FormLabel>
@@ -182,9 +171,6 @@ export function SearchRecordsForm({ setSearchQuery }: SearchFormProps) {
 													{details.name} - {details.department}
 												</SelectItem>
 											))}
-											<SelectItem value="23">m@example.com</SelectItem>
-											<SelectItem value="34">m@google.com</SelectItem>
-											<SelectItem value="24">m@support.com</SelectItem>
 										</SelectContent>
 									</Select>
 

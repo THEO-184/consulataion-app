@@ -96,7 +96,9 @@ export function BookConsultationForm() {
 	return (
 		<Dialog open={openModal} onOpenChange={setOpenModal}>
 			<DialogTrigger asChild>
-				<Button variant="default">Book Consultation</Button>
+				<Button variant="default" className="bg-blue-400 hover:bg-blue-500">
+					Book Consultation
+				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
