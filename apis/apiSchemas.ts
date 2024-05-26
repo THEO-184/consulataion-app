@@ -9,9 +9,14 @@ export type HealthCareProvideResponseDto = {
   department: Record<string, any>;
 };
 
+export type HealthFacilityResponse = {
+  name: string;
+};
+
 export type OfficerResponseDto = {
   id: number;
   name: string;
+  healthFacility: HealthFacilityResponse;
 };
 
 export type PatientResponseDto = {
