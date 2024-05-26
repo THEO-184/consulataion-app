@@ -8,792 +8,469 @@ import { useApiContext, ApiContext } from "./apiContext";
 import type * as Fetcher from "./apiFetcher";
 import { apiFetch } from "./apiFetcher";
 import type * as Schemas from "./apiSchemas";
-import { PatientLoginResponse } from "@/interfaces/patient.interface";
-import { OfficerLoginResponse } from "@/interfaces/officer.interface";
 
 export type AppControllerGetHelloError = Fetcher.ErrorWrapper<undefined>;
 
 export type AppControllerGetHelloVariables = ApiContext["fetcherOptions"];
 
 export const fetchAppControllerGetHello = (
-	variables: AppControllerGetHelloVariables,
-	signal?: AbortSignal
+  variables: AppControllerGetHelloVariables,
+  signal?: AbortSignal,
 ) =>
-	apiFetch<string, AppControllerGetHelloError, undefined, {}, {}, {}>({
-		url: "/",
-		method: "get",
-		...variables,
-		signal,
-	});
+  apiFetch<string, AppControllerGetHelloError, undefined, {}, {}, {}>({
+    url: "/",
+    method: "get",
+    ...variables,
+    signal,
+  });
 
-export const useAppControllerGetHello = <TData = string>(
-	variables: AppControllerGetHelloVariables,
-	options?: Omit<
-		reactQuery.UseQueryOptions<string, AppControllerGetHelloError, TData>,
-		"queryKey" | "queryFn" | "initialData"
-	>
+export const useAppControllerGetHello = <TData = string,>(
+  variables: AppControllerGetHelloVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<string, AppControllerGetHelloError, TData>,
+    "queryKey" | "queryFn" | "initialData"
+  >,
 ) => {
-	const { fetcherOptions, queryOptions, queryKeyFn } = useApiContext(options);
-	return reactQuery.useQuery<string, AppControllerGetHelloError, TData>({
-		queryKey: queryKeyFn({
-			path: "/",
-			operationId: "appControllerGetHello",
-			variables,
-		}),
-		queryFn: ({ signal }) =>
-			fetchAppControllerGetHello({ ...fetcherOptions, ...variables }, signal),
-		...options,
-		...queryOptions,
-	});
-};
-
-export type OfficerControllerCreateError = Fetcher.ErrorWrapper<undefined>;
-
-export type OfficerControllerCreateVariables = ApiContext["fetcherOptions"];
-
-export const fetchOfficerControllerCreate = (
-	variables: OfficerControllerCreateVariables,
-	signal?: AbortSignal
-) =>
-	apiFetch<string, OfficerControllerCreateError, undefined, {}, {}, {}>({
-		url: "/officer",
-		method: "post",
-		...variables,
-		signal,
-	});
-
-export const useOfficerControllerCreate = (
-	options?: Omit<
-		reactQuery.UseMutationOptions<
-			string,
-			OfficerControllerCreateError,
-			OfficerControllerCreateVariables
-		>,
-		"mutationFn"
-	>
-) => {
-	const { fetcherOptions } = useApiContext();
-	return reactQuery.useMutation<
-		string,
-		OfficerControllerCreateError,
-		OfficerControllerCreateVariables
-	>({
-		mutationFn: (variables: OfficerControllerCreateVariables) =>
-			fetchOfficerControllerCreate({ ...fetcherOptions, ...variables }),
-		...options,
-	});
-};
-
-export type OfficerControllerFindAllError = Fetcher.ErrorWrapper<undefined>;
-
-export type OfficerControllerFindAllVariables = ApiContext["fetcherOptions"];
-
-export const fetchOfficerControllerFindAll = (
-	variables: OfficerControllerFindAllVariables,
-	signal?: AbortSignal
-) =>
-	apiFetch<string, OfficerControllerFindAllError, undefined, {}, {}, {}>({
-		url: "/officer",
-		method: "get",
-		...variables,
-		signal,
-	});
-
-export const useOfficerControllerFindAll = <TData = string>(
-	variables: OfficerControllerFindAllVariables,
-	options?: Omit<
-		reactQuery.UseQueryOptions<string, OfficerControllerFindAllError, TData>,
-		"queryKey" | "queryFn" | "initialData"
-	>
-) => {
-	const { fetcherOptions, queryOptions, queryKeyFn } = useApiContext(options);
-	return reactQuery.useQuery<string, OfficerControllerFindAllError, TData>({
-		queryKey: queryKeyFn({
-			path: "/officer",
-			operationId: "officerControllerFindAll",
-			variables,
-		}),
-		queryFn: ({ signal }) =>
-			fetchOfficerControllerFindAll(
-				{ ...fetcherOptions, ...variables },
-				signal
-			),
-		...options,
-		...queryOptions,
-	});
-};
-
-export type OfficerControllerFindOnePathParams = {
-	id: string;
-};
-
-export type OfficerControllerFindOneError = Fetcher.ErrorWrapper<undefined>;
-
-export type OfficerControllerFindOneVariables = {
-	pathParams: OfficerControllerFindOnePathParams;
-} & ApiContext["fetcherOptions"];
-
-export const fetchOfficerControllerFindOne = (
-	variables: OfficerControllerFindOneVariables,
-	signal?: AbortSignal
-) =>
-	apiFetch<
-		string,
-		OfficerControllerFindOneError,
-		undefined,
-		{},
-		{},
-		OfficerControllerFindOnePathParams
-	>({ url: "/officer/{id}", method: "get", ...variables, signal });
-
-export const useOfficerControllerFindOne = <TData = string>(
-	variables: OfficerControllerFindOneVariables,
-	options?: Omit<
-		reactQuery.UseQueryOptions<string, OfficerControllerFindOneError, TData>,
-		"queryKey" | "queryFn" | "initialData"
-	>
-) => {
-	const { fetcherOptions, queryOptions, queryKeyFn } = useApiContext(options);
-	return reactQuery.useQuery<string, OfficerControllerFindOneError, TData>({
-		queryKey: queryKeyFn({
-			path: "/officer/{id}",
-			operationId: "officerControllerFindOne",
-			variables,
-		}),
-		queryFn: ({ signal }) =>
-			fetchOfficerControllerFindOne(
-				{ ...fetcherOptions, ...variables },
-				signal
-			),
-		...options,
-		...queryOptions,
-	});
-};
-
-export type OfficerControllerUpdatePathParams = {
-	id: number;
-};
-
-export type OfficerControllerUpdateError = Fetcher.ErrorWrapper<undefined>;
-
-export type OfficerControllerUpdateVariables = {
-	pathParams: OfficerControllerUpdatePathParams;
-} & ApiContext["fetcherOptions"];
-
-export const fetchOfficerControllerUpdate = (
-	variables: OfficerControllerUpdateVariables,
-	signal?: AbortSignal
-) =>
-	apiFetch<
-		string,
-		OfficerControllerUpdateError,
-		undefined,
-		{},
-		{},
-		OfficerControllerUpdatePathParams
-	>({ url: "/officer/{id}", method: "patch", ...variables, signal });
-
-export const useOfficerControllerUpdate = (
-	options?: Omit<
-		reactQuery.UseMutationOptions<
-			string,
-			OfficerControllerUpdateError,
-			OfficerControllerUpdateVariables
-		>,
-		"mutationFn"
-	>
-) => {
-	const { fetcherOptions } = useApiContext();
-	return reactQuery.useMutation<
-		string,
-		OfficerControllerUpdateError,
-		OfficerControllerUpdateVariables
-	>({
-		mutationFn: (variables: OfficerControllerUpdateVariables) =>
-			fetchOfficerControllerUpdate({ ...fetcherOptions, ...variables }),
-		...options,
-	});
-};
-
-export type OfficerControllerRemovePathParams = {
-	id: string;
-};
-
-export type OfficerControllerRemoveError = Fetcher.ErrorWrapper<undefined>;
-
-export type OfficerControllerRemoveVariables = {
-	pathParams: OfficerControllerRemovePathParams;
-} & ApiContext["fetcherOptions"];
-
-export const fetchOfficerControllerRemove = (
-	variables: OfficerControllerRemoveVariables,
-	signal?: AbortSignal
-) =>
-	apiFetch<
-		string,
-		OfficerControllerRemoveError,
-		undefined,
-		{},
-		{},
-		OfficerControllerRemovePathParams
-	>({ url: "/officer/{id}", method: "delete", ...variables, signal });
-
-export const useOfficerControllerRemove = (
-	options?: Omit<
-		reactQuery.UseMutationOptions<
-			string,
-			OfficerControllerRemoveError,
-			OfficerControllerRemoveVariables
-		>,
-		"mutationFn"
-	>
-) => {
-	const { fetcherOptions } = useApiContext();
-	return reactQuery.useMutation<
-		string,
-		OfficerControllerRemoveError,
-		OfficerControllerRemoveVariables
-	>({
-		mutationFn: (variables: OfficerControllerRemoveVariables) =>
-			fetchOfficerControllerRemove({ ...fetcherOptions, ...variables }),
-		...options,
-	});
+  const { fetcherOptions, queryOptions, queryKeyFn } = useApiContext(options);
+  return reactQuery.useQuery<string, AppControllerGetHelloError, TData>({
+    queryKey: queryKeyFn({
+      path: "/",
+      operationId: "appControllerGetHello",
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchAppControllerGetHello({ ...fetcherOptions, ...variables }, signal),
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type PatientControllerGetMyConsultationError =
-	Fetcher.ErrorWrapper<undefined>;
+  Fetcher.ErrorWrapper<undefined>;
 
 export type PatientControllerGetMyConsultationVariables =
-	ApiContext["fetcherOptions"];
+  ApiContext["fetcherOptions"];
 
 export const fetchPatientControllerGetMyConsultation = (
-	variables: PatientControllerGetMyConsultationVariables,
-	signal?: AbortSignal
+  variables: PatientControllerGetMyConsultationVariables,
+  signal?: AbortSignal,
 ) =>
-	apiFetch<
-		undefined,
-		PatientControllerGetMyConsultationError,
-		undefined,
-		{},
-		{},
-		{}
-	>({ url: "/patient/consultations", method: "get", ...variables, signal });
+  apiFetch<
+    Schemas.GetPatientConsultationResponseDto,
+    PatientControllerGetMyConsultationError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: "/patient/consultations", method: "get", ...variables, signal });
 
-export const usePatientControllerGetMyConsultation = <TData = undefined>(
-	variables: PatientControllerGetMyConsultationVariables,
-	options?: Omit<
-		reactQuery.UseQueryOptions<
-			undefined,
-			PatientControllerGetMyConsultationError,
-			TData
-		>,
-		"queryKey" | "queryFn" | "initialData"
-	>
+export const usePatientControllerGetMyConsultation = <
+  TData = Schemas.GetPatientConsultationResponseDto,
+>(
+  variables: PatientControllerGetMyConsultationVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.GetPatientConsultationResponseDto,
+      PatientControllerGetMyConsultationError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
 ) => {
-	const { fetcherOptions, queryOptions, queryKeyFn } = useApiContext(options);
-	return reactQuery.useQuery<
-		undefined,
-		PatientControllerGetMyConsultationError,
-		TData
-	>({
-		queryKey: queryKeyFn({
-			path: "/patient/consultations",
-			operationId: "patientControllerGetMyConsultation",
-			variables,
-		}),
-		queryFn: ({ signal }) =>
-			fetchPatientControllerGetMyConsultation(
-				{ ...fetcherOptions, ...variables },
-				signal
-			),
-		...options,
-		...queryOptions,
-	});
+  const { fetcherOptions, queryOptions, queryKeyFn } = useApiContext(options);
+  return reactQuery.useQuery<
+    Schemas.GetPatientConsultationResponseDto,
+    PatientControllerGetMyConsultationError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: "/patient/consultations",
+      operationId: "patientControllerGetMyConsultation",
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchPatientControllerGetMyConsultation(
+        { ...fetcherOptions, ...variables },
+        signal,
+      ),
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type AuthControllerOfficerLoginError = Fetcher.ErrorWrapper<undefined>;
 
 export type AuthControllerOfficerLoginVariables = {
-	body: Schemas.LoginOfficerDto;
+  body: Schemas.LoginOfficerDto;
 } & ApiContext["fetcherOptions"];
 
 export const fetchAuthControllerOfficerLogin = (
-	variables: AuthControllerOfficerLoginVariables,
-	signal?: AbortSignal
+  variables: AuthControllerOfficerLoginVariables,
+  signal?: AbortSignal,
 ) =>
-	apiFetch<
-		OfficerLoginResponse,
-		AuthControllerOfficerLoginError,
-		Schemas.LoginOfficerDto,
-		{},
-		{},
-		{}
-	>({ url: "/auth/login/officer", method: "post", ...variables, signal });
+  apiFetch<
+    Schemas.LoginOfficerResponseDto,
+    AuthControllerOfficerLoginError,
+    Schemas.LoginOfficerDto,
+    {},
+    {},
+    {}
+  >({ url: "/auth/login/officer", method: "post", ...variables, signal });
 
 export const useAuthControllerOfficerLogin = (
-	options?: Omit<
-		reactQuery.UseMutationOptions<
-			OfficerLoginResponse,
-			AuthControllerOfficerLoginError,
-			AuthControllerOfficerLoginVariables
-		>,
-		"mutationFn"
-	>
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.LoginOfficerResponseDto,
+      AuthControllerOfficerLoginError,
+      AuthControllerOfficerLoginVariables
+    >,
+    "mutationFn"
+  >,
 ) => {
-	const { fetcherOptions } = useApiContext();
-	return reactQuery.useMutation<
-		OfficerLoginResponse,
-		AuthControllerOfficerLoginError,
-		AuthControllerOfficerLoginVariables
-	>({
-		mutationFn: (variables: AuthControllerOfficerLoginVariables) =>
-			fetchAuthControllerOfficerLogin({ ...fetcherOptions, ...variables }),
-		...options,
-	});
+  const { fetcherOptions } = useApiContext();
+  return reactQuery.useMutation<
+    Schemas.LoginOfficerResponseDto,
+    AuthControllerOfficerLoginError,
+    AuthControllerOfficerLoginVariables
+  >({
+    mutationFn: (variables: AuthControllerOfficerLoginVariables) =>
+      fetchAuthControllerOfficerLogin({ ...fetcherOptions, ...variables }),
+    ...options,
+  });
 };
 
 export type AuthControllerPatientLoginError = Fetcher.ErrorWrapper<undefined>;
 
 export type AuthControllerPatientLoginVariables = {
-	body: Schemas.PatientLoginDto;
+  body: Schemas.PatientLoginDto;
 } & ApiContext["fetcherOptions"];
 
 export const fetchAuthControllerPatientLogin = (
-	variables: AuthControllerPatientLoginVariables,
-	signal?: AbortSignal
+  variables: AuthControllerPatientLoginVariables,
+  signal?: AbortSignal,
 ) =>
-	apiFetch<
-		PatientLoginResponse,
-		AuthControllerPatientLoginError,
-		Schemas.PatientLoginDto,
-		{},
-		{},
-		{}
-	>({ url: "/auth/login/patient", method: "post", ...variables, signal });
+  apiFetch<
+    Schemas.LoginPatientResponseDto,
+    AuthControllerPatientLoginError,
+    Schemas.PatientLoginDto,
+    {},
+    {},
+    {}
+  >({ url: "/auth/login/patient", method: "post", ...variables, signal });
 
 export const useAuthControllerPatientLogin = (
-	options?: Omit<
-		reactQuery.UseMutationOptions<
-			PatientLoginResponse,
-			AuthControllerPatientLoginError,
-			AuthControllerPatientLoginVariables
-		>,
-		"mutationFn"
-	>
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.LoginPatientResponseDto,
+      AuthControllerPatientLoginError,
+      AuthControllerPatientLoginVariables
+    >,
+    "mutationFn"
+  >,
 ) => {
-	const { fetcherOptions } = useApiContext();
-	return reactQuery.useMutation<
-		PatientLoginResponse,
-		AuthControllerPatientLoginError,
-		AuthControllerPatientLoginVariables
-	>({
-		mutationFn: (variables: AuthControllerPatientLoginVariables) =>
-			fetchAuthControllerPatientLogin({ ...fetcherOptions, ...variables }),
-		...options,
-	});
+  const { fetcherOptions } = useApiContext();
+  return reactQuery.useMutation<
+    Schemas.LoginPatientResponseDto,
+    AuthControllerPatientLoginError,
+    AuthControllerPatientLoginVariables
+  >({
+    mutationFn: (variables: AuthControllerPatientLoginVariables) =>
+      fetchAuthControllerPatientLogin({ ...fetcherOptions, ...variables }),
+    ...options,
+  });
 };
 
 export type ConsultationControllerBookConsultationError =
-	Fetcher.ErrorWrapper<undefined>;
+  Fetcher.ErrorWrapper<undefined>;
 
 export type ConsultationControllerBookConsultationVariables = {
-	body: Schemas.CreateConsultationDto;
+  body: Schemas.CreateConsultationDto;
 } & ApiContext["fetcherOptions"];
 
 export const fetchConsultationControllerBookConsultation = (
-	variables: ConsultationControllerBookConsultationVariables,
-	signal?: AbortSignal
+  variables: ConsultationControllerBookConsultationVariables,
+  signal?: AbortSignal,
 ) =>
-	apiFetch<
-		undefined,
-		ConsultationControllerBookConsultationError,
-		Schemas.CreateConsultationDto,
-		{},
-		{},
-		{}
-	>({ url: "/consultation", method: "post", ...variables, signal });
+  apiFetch<
+    Schemas.BookConsultationResponseDto,
+    ConsultationControllerBookConsultationError,
+    Schemas.CreateConsultationDto,
+    {},
+    {},
+    {}
+  >({ url: "/consultation", method: "post", ...variables, signal });
 
 export const useConsultationControllerBookConsultation = (
-	options?: Omit<
-		reactQuery.UseMutationOptions<
-			undefined,
-			ConsultationControllerBookConsultationError,
-			ConsultationControllerBookConsultationVariables
-		>,
-		"mutationFn"
-	>
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.BookConsultationResponseDto,
+      ConsultationControllerBookConsultationError,
+      ConsultationControllerBookConsultationVariables
+    >,
+    "mutationFn"
+  >,
 ) => {
-	const { fetcherOptions } = useApiContext();
-	return reactQuery.useMutation<
-		undefined,
-		ConsultationControllerBookConsultationError,
-		ConsultationControllerBookConsultationVariables
-	>({
-		mutationFn: (variables: ConsultationControllerBookConsultationVariables) =>
-			fetchConsultationControllerBookConsultation({
-				...fetcherOptions,
-				...variables,
-			}),
-		...options,
-	});
+  const { fetcherOptions } = useApiContext();
+  return reactQuery.useMutation<
+    Schemas.BookConsultationResponseDto,
+    ConsultationControllerBookConsultationError,
+    ConsultationControllerBookConsultationVariables
+  >({
+    mutationFn: (variables: ConsultationControllerBookConsultationVariables) =>
+      fetchConsultationControllerBookConsultation({
+        ...fetcherOptions,
+        ...variables,
+      }),
+    ...options,
+  });
 };
 
 export type ConsultationControllerGetPatientConsultationQueryParams = {
-	date?: string;
-	patientName?: string;
-	healthcareProvider?: string;
-	consultationType?: string;
-	medicalCondition?: string;
+  date?: string;
+  patientName?: string;
+  healthcareProvider?: string;
+  consultationType?: string;
+  medicalCondition?: string;
 };
 
 export type ConsultationControllerGetPatientConsultationError =
-	Fetcher.ErrorWrapper<undefined>;
+  Fetcher.ErrorWrapper<undefined>;
 
 export type ConsultationControllerGetPatientConsultationVariables = {
-	queryParams?: ConsultationControllerGetPatientConsultationQueryParams;
+  queryParams?: ConsultationControllerGetPatientConsultationQueryParams;
 } & ApiContext["fetcherOptions"];
 
 export const fetchConsultationControllerGetPatientConsultation = (
-	variables: ConsultationControllerGetPatientConsultationVariables,
-	signal?: AbortSignal
+  variables: ConsultationControllerGetPatientConsultationVariables,
+  signal?: AbortSignal,
 ) =>
-	apiFetch<
-		undefined,
-		ConsultationControllerGetPatientConsultationError,
-		undefined,
-		{},
-		ConsultationControllerGetPatientConsultationQueryParams,
-		{}
-	>({ url: "/consultation", method: "get", ...variables, signal });
+  apiFetch<
+    Schemas.GetPatientConsultationResponseDto,
+    ConsultationControllerGetPatientConsultationError,
+    undefined,
+    {},
+    ConsultationControllerGetPatientConsultationQueryParams,
+    {}
+  >({ url: "/consultation", method: "get", ...variables, signal });
 
 export const useConsultationControllerGetPatientConsultation = <
-	TData = undefined,
+  TData = Schemas.GetPatientConsultationResponseDto,
 >(
-	variables: ConsultationControllerGetPatientConsultationVariables,
-	options?: Omit<
-		reactQuery.UseQueryOptions<
-			undefined,
-			ConsultationControllerGetPatientConsultationError,
-			TData
-		>,
-		"queryKey" | "queryFn" | "initialData"
-	>
+  variables: ConsultationControllerGetPatientConsultationVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.GetPatientConsultationResponseDto,
+      ConsultationControllerGetPatientConsultationError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
 ) => {
-	const { fetcherOptions, queryOptions, queryKeyFn } = useApiContext(options);
-	return reactQuery.useQuery<
-		undefined,
-		ConsultationControllerGetPatientConsultationError,
-		TData
-	>({
-		queryKey: queryKeyFn({
-			path: "/consultation",
-			operationId: "consultationControllerGetPatientConsultation",
-			variables,
-		}),
-		queryFn: ({ signal }) =>
-			fetchConsultationControllerGetPatientConsultation(
-				{ ...fetcherOptions, ...variables },
-				signal
-			),
-		...options,
-		...queryOptions,
-	});
-};
-
-export type HealthcareProvidersControllerCreateError =
-	Fetcher.ErrorWrapper<undefined>;
-
-export type HealthcareProvidersControllerCreateVariables = {
-	body?: Schemas.CreateHealthcareProviderDto;
-} & ApiContext["fetcherOptions"];
-
-export const fetchHealthcareProvidersControllerCreate = (
-	variables: HealthcareProvidersControllerCreateVariables,
-	signal?: AbortSignal
-) =>
-	apiFetch<
-		string,
-		HealthcareProvidersControllerCreateError,
-		Schemas.CreateHealthcareProviderDto,
-		{},
-		{},
-		{}
-	>({ url: "/healthcare-providers", method: "post", ...variables, signal });
-
-export const useHealthcareProvidersControllerCreate = (
-	options?: Omit<
-		reactQuery.UseMutationOptions<
-			string,
-			HealthcareProvidersControllerCreateError,
-			HealthcareProvidersControllerCreateVariables
-		>,
-		"mutationFn"
-	>
-) => {
-	const { fetcherOptions } = useApiContext();
-	return reactQuery.useMutation<
-		string,
-		HealthcareProvidersControllerCreateError,
-		HealthcareProvidersControllerCreateVariables
-	>({
-		mutationFn: (variables: HealthcareProvidersControllerCreateVariables) =>
-			fetchHealthcareProvidersControllerCreate({
-				...fetcherOptions,
-				...variables,
-			}),
-		...options,
-	});
+  const { fetcherOptions, queryOptions, queryKeyFn } = useApiContext(options);
+  return reactQuery.useQuery<
+    Schemas.GetPatientConsultationResponseDto,
+    ConsultationControllerGetPatientConsultationError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: "/consultation",
+      operationId: "consultationControllerGetPatientConsultation",
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchConsultationControllerGetPatientConsultation(
+        { ...fetcherOptions, ...variables },
+        signal,
+      ),
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type HealthcareProvidersControllerFindAllError =
-	Fetcher.ErrorWrapper<undefined>;
+  Fetcher.ErrorWrapper<undefined>;
 
 export type HealthcareProvidersControllerFindAllVariables =
-	ApiContext["fetcherOptions"];
+  ApiContext["fetcherOptions"];
 
 export const fetchHealthcareProvidersControllerFindAll = (
-	variables: HealthcareProvidersControllerFindAllVariables,
-	signal?: AbortSignal
+  variables: HealthcareProvidersControllerFindAllVariables,
+  signal?: AbortSignal,
 ) =>
-	apiFetch<
-		undefined,
-		HealthcareProvidersControllerFindAllError,
-		undefined,
-		{},
-		{},
-		{}
-	>({ url: "/healthcare-providers", method: "get", ...variables, signal });
+  apiFetch<
+    undefined,
+    HealthcareProvidersControllerFindAllError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: "/healthcare-providers", method: "get", ...variables, signal });
 
-export const useHealthcareProvidersControllerFindAll = <TData = undefined>(
-	variables: HealthcareProvidersControllerFindAllVariables,
-	options?: Omit<
-		reactQuery.UseQueryOptions<
-			undefined,
-			HealthcareProvidersControllerFindAllError,
-			TData
-		>,
-		"queryKey" | "queryFn" | "initialData"
-	>
+export const useHealthcareProvidersControllerFindAll = <TData = undefined,>(
+  variables: HealthcareProvidersControllerFindAllVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      undefined,
+      HealthcareProvidersControllerFindAllError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
 ) => {
-	const { fetcherOptions, queryOptions, queryKeyFn } = useApiContext(options);
-	return reactQuery.useQuery<
-		undefined,
-		HealthcareProvidersControllerFindAllError,
-		TData
-	>({
-		queryKey: queryKeyFn({
-			path: "/healthcare-providers",
-			operationId: "healthcareProvidersControllerFindAll",
-			variables,
-		}),
-		queryFn: ({ signal }) =>
-			fetchHealthcareProvidersControllerFindAll(
-				{ ...fetcherOptions, ...variables },
-				signal
-			),
-		...options,
-		...queryOptions,
-	});
+  const { fetcherOptions, queryOptions, queryKeyFn } = useApiContext(options);
+  return reactQuery.useQuery<
+    undefined,
+    HealthcareProvidersControllerFindAllError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: "/healthcare-providers",
+      operationId: "healthcareProvidersControllerFindAll",
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchHealthcareProvidersControllerFindAll(
+        { ...fetcherOptions, ...variables },
+        signal,
+      ),
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type HealthcareProvidersControllerFindOnePathParams = {
-	id: string;
+  id: string;
 };
 
 export type HealthcareProvidersControllerFindOneError =
-	Fetcher.ErrorWrapper<undefined>;
+  Fetcher.ErrorWrapper<undefined>;
 
 export type HealthcareProvidersControllerFindOneVariables = {
-	pathParams: HealthcareProvidersControllerFindOnePathParams;
+  pathParams: HealthcareProvidersControllerFindOnePathParams;
 } & ApiContext["fetcherOptions"];
 
 export const fetchHealthcareProvidersControllerFindOne = (
-	variables: HealthcareProvidersControllerFindOneVariables,
-	signal?: AbortSignal
+  variables: HealthcareProvidersControllerFindOneVariables,
+  signal?: AbortSignal,
 ) =>
-	apiFetch<
-		string,
-		HealthcareProvidersControllerFindOneError,
-		undefined,
-		{},
-		{},
-		HealthcareProvidersControllerFindOnePathParams
-	>({ url: "/healthcare-providers/{id}", method: "get", ...variables, signal });
+  apiFetch<
+    string,
+    HealthcareProvidersControllerFindOneError,
+    undefined,
+    {},
+    {},
+    HealthcareProvidersControllerFindOnePathParams
+  >({ url: "/healthcare-providers/{id}", method: "get", ...variables, signal });
 
-export const useHealthcareProvidersControllerFindOne = <TData = string>(
-	variables: HealthcareProvidersControllerFindOneVariables,
-	options?: Omit<
-		reactQuery.UseQueryOptions<
-			string,
-			HealthcareProvidersControllerFindOneError,
-			TData
-		>,
-		"queryKey" | "queryFn" | "initialData"
-	>
+export const useHealthcareProvidersControllerFindOne = <TData = string,>(
+  variables: HealthcareProvidersControllerFindOneVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      string,
+      HealthcareProvidersControllerFindOneError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
 ) => {
-	const { fetcherOptions, queryOptions, queryKeyFn } = useApiContext(options);
-	return reactQuery.useQuery<
-		string,
-		HealthcareProvidersControllerFindOneError,
-		TData
-	>({
-		queryKey: queryKeyFn({
-			path: "/healthcare-providers/{id}",
-			operationId: "healthcareProvidersControllerFindOne",
-			variables,
-		}),
-		queryFn: ({ signal }) =>
-			fetchHealthcareProvidersControllerFindOne(
-				{ ...fetcherOptions, ...variables },
-				signal
-			),
-		...options,
-		...queryOptions,
-	});
-};
-
-export type HealthcareProvidersControllerUpdatePathParams = {
-	id: string;
-};
-
-export type HealthcareProvidersControllerUpdateError =
-	Fetcher.ErrorWrapper<undefined>;
-
-export type HealthcareProvidersControllerUpdateVariables = {
-	body?: Schemas.UpdateHealthcareProviderDto;
-	pathParams: HealthcareProvidersControllerUpdatePathParams;
-} & ApiContext["fetcherOptions"];
-
-export const fetchHealthcareProvidersControllerUpdate = (
-	variables: HealthcareProvidersControllerUpdateVariables,
-	signal?: AbortSignal
-) =>
-	apiFetch<
-		string,
-		HealthcareProvidersControllerUpdateError,
-		Schemas.UpdateHealthcareProviderDto,
-		{},
-		{},
-		HealthcareProvidersControllerUpdatePathParams
-	>({
-		url: "/healthcare-providers/{id}",
-		method: "patch",
-		...variables,
-		signal,
-	});
-
-export const useHealthcareProvidersControllerUpdate = (
-	options?: Omit<
-		reactQuery.UseMutationOptions<
-			string,
-			HealthcareProvidersControllerUpdateError,
-			HealthcareProvidersControllerUpdateVariables
-		>,
-		"mutationFn"
-	>
-) => {
-	const { fetcherOptions } = useApiContext();
-	return reactQuery.useMutation<
-		string,
-		HealthcareProvidersControllerUpdateError,
-		HealthcareProvidersControllerUpdateVariables
-	>({
-		mutationFn: (variables: HealthcareProvidersControllerUpdateVariables) =>
-			fetchHealthcareProvidersControllerUpdate({
-				...fetcherOptions,
-				...variables,
-			}),
-		...options,
-	});
+  const { fetcherOptions, queryOptions, queryKeyFn } = useApiContext(options);
+  return reactQuery.useQuery<
+    string,
+    HealthcareProvidersControllerFindOneError,
+    TData
+  >({
+    queryKey: queryKeyFn({
+      path: "/healthcare-providers/{id}",
+      operationId: "healthcareProvidersControllerFindOne",
+      variables,
+    }),
+    queryFn: ({ signal }) =>
+      fetchHealthcareProvidersControllerFindOne(
+        { ...fetcherOptions, ...variables },
+        signal,
+      ),
+    ...options,
+    ...queryOptions,
+  });
 };
 
 export type HealthcareProvidersControllerRemovePathParams = {
-	id: string;
+  id: string;
 };
 
 export type HealthcareProvidersControllerRemoveError =
-	Fetcher.ErrorWrapper<undefined>;
+  Fetcher.ErrorWrapper<undefined>;
 
 export type HealthcareProvidersControllerRemoveVariables = {
-	pathParams: HealthcareProvidersControllerRemovePathParams;
+  pathParams: HealthcareProvidersControllerRemovePathParams;
 } & ApiContext["fetcherOptions"];
 
 export const fetchHealthcareProvidersControllerRemove = (
-	variables: HealthcareProvidersControllerRemoveVariables,
-	signal?: AbortSignal
+  variables: HealthcareProvidersControllerRemoveVariables,
+  signal?: AbortSignal,
 ) =>
-	apiFetch<
-		string,
-		HealthcareProvidersControllerRemoveError,
-		undefined,
-		{},
-		{},
-		HealthcareProvidersControllerRemovePathParams
-	>({
-		url: "/healthcare-providers/{id}",
-		method: "delete",
-		...variables,
-		signal,
-	});
+  apiFetch<
+    string,
+    HealthcareProvidersControllerRemoveError,
+    undefined,
+    {},
+    {},
+    HealthcareProvidersControllerRemovePathParams
+  >({
+    url: "/healthcare-providers/{id}",
+    method: "delete",
+    ...variables,
+    signal,
+  });
 
 export const useHealthcareProvidersControllerRemove = (
-	options?: Omit<
-		reactQuery.UseMutationOptions<
-			string,
-			HealthcareProvidersControllerRemoveError,
-			HealthcareProvidersControllerRemoveVariables
-		>,
-		"mutationFn"
-	>
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      string,
+      HealthcareProvidersControllerRemoveError,
+      HealthcareProvidersControllerRemoveVariables
+    >,
+    "mutationFn"
+  >,
 ) => {
-	const { fetcherOptions } = useApiContext();
-	return reactQuery.useMutation<
-		string,
-		HealthcareProvidersControllerRemoveError,
-		HealthcareProvidersControllerRemoveVariables
-	>({
-		mutationFn: (variables: HealthcareProvidersControllerRemoveVariables) =>
-			fetchHealthcareProvidersControllerRemove({
-				...fetcherOptions,
-				...variables,
-			}),
-		...options,
-	});
+  const { fetcherOptions } = useApiContext();
+  return reactQuery.useMutation<
+    string,
+    HealthcareProvidersControllerRemoveError,
+    HealthcareProvidersControllerRemoveVariables
+  >({
+    mutationFn: (variables: HealthcareProvidersControllerRemoveVariables) =>
+      fetchHealthcareProvidersControllerRemove({
+        ...fetcherOptions,
+        ...variables,
+      }),
+    ...options,
+  });
 };
 
 export type QueryOperation =
-	| {
-			path: "/";
-			operationId: "appControllerGetHello";
-			variables: AppControllerGetHelloVariables;
-	  }
-	| {
-			path: "/officer";
-			operationId: "officerControllerFindAll";
-			variables: OfficerControllerFindAllVariables;
-	  }
-	| {
-			path: "/officer/{id}";
-			operationId: "officerControllerFindOne";
-			variables: OfficerControllerFindOneVariables;
-	  }
-	| {
-			path: "/patient/consultations";
-			operationId: "patientControllerGetMyConsultation";
-			variables: PatientControllerGetMyConsultationVariables;
-	  }
-	| {
-			path: "/consultation";
-			operationId: "consultationControllerGetPatientConsultation";
-			variables: ConsultationControllerGetPatientConsultationVariables;
-	  }
-	| {
-			path: "/healthcare-providers";
-			operationId: "healthcareProvidersControllerFindAll";
-			variables: HealthcareProvidersControllerFindAllVariables;
-	  }
-	| {
-			path: "/healthcare-providers/{id}";
-			operationId: "healthcareProvidersControllerFindOne";
-			variables: HealthcareProvidersControllerFindOneVariables;
-	  };
+  | {
+      path: "/";
+      operationId: "appControllerGetHello";
+      variables: AppControllerGetHelloVariables;
+    }
+  | {
+      path: "/patient/consultations";
+      operationId: "patientControllerGetMyConsultation";
+      variables: PatientControllerGetMyConsultationVariables;
+    }
+  | {
+      path: "/consultation";
+      operationId: "consultationControllerGetPatientConsultation";
+      variables: ConsultationControllerGetPatientConsultationVariables;
+    }
+  | {
+      path: "/healthcare-providers";
+      operationId: "healthcareProvidersControllerFindAll";
+      variables: HealthcareProvidersControllerFindAllVariables;
+    }
+  | {
+      path: "/healthcare-providers/{id}";
+      operationId: "healthcareProvidersControllerFindOne";
+      variables: HealthcareProvidersControllerFindOneVariables;
+    };

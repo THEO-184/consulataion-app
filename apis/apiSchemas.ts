@@ -3,14 +3,61 @@
  *
  * @version 1.0
  */
+export type HealthCareProvideResponseDto = {
+  id: number;
+  name: string;
+  department: Record<string, any>;
+};
+
+export type OfficerResponseDto = {
+  id: number;
+  name: string;
+};
+
+export type PatientResponseDto = {
+  firstName: string;
+  lastName: string;
+  id: number;
+};
+
+export type ConsultationResponseDto = {
+  id: number;
+  date: string;
+  consultationType: string;
+  medicalCondition: string;
+  notes: string;
+  officerId: number;
+  patientId: number;
+  healthcareProviderId: number;
+  createdAt: string;
+  updatedAt: string;
+  healthcareProvider: HealthCareProvideResponseDto;
+  officer: OfficerResponseDto;
+  patient: PatientResponseDto;
+};
+
+export type GetPatientConsultationResponseDto = {
+  consultations: ConsultationResponseDto[];
+  count: number;
+};
+
 export type LoginOfficerDto = {
   password: string;
   email: string;
 };
 
+export type LoginOfficerResponseDto = {
+  token: string;
+  officer: OfficerResponseDto;
+};
+
 export type PatientLoginDto = {
-  email: string;
   id: number;
+};
+
+export type LoginPatientResponseDto = {
+  token: string;
+  patient: PatientResponseDto;
 };
 
 export type PatientDto = {
@@ -24,13 +71,11 @@ export type CreateConsultationDto = {
   medicalCondition: string;
   notes?: string;
   healthcareProviderId: number;
-  /**
-   * @format date-time
-   */
-  date: string;
+  date?: string;
   patient: PatientDto;
 };
 
-export type CreateHealthcareProviderDto = {};
-
-export type UpdateHealthcareProviderDto = {};
+export type BookConsultationResponseDto = {
+  consultation: ConsultationResponseDto;
+  message: string;
+};
