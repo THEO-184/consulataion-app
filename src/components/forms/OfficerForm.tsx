@@ -9,7 +9,6 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -45,10 +44,7 @@ export function OfficerForm() {
 
 	console.log("erros", errors);
 
-	// 2. Define a submit handler.
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
 		console.log(values);
 		login(
 			{
@@ -56,14 +52,19 @@ export function OfficerForm() {
 			},
 			{
 				onSuccess(data, variables, context) {
-					console.log("data", data);
 					localStorage.setItem("token", data.token);
-					window.alert("login succesfull");
+					localStorage.setItem(
+						"details",
+						JSON.stringify({
+							name: data.officer.name,
+							facilityName: data.officer.healthFacility.name,
+						})
+					);
 
 					window.location.href = `/officer/${data.officer.id}`;
 				},
 				onError(error, variables, context) {
-					window.alert("Patient Id and/or email incorrect");
+					window.alert("Password Incorrect");
 					console.log("error", error);
 				},
 			}

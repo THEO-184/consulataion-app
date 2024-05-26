@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useConsultationControllerGetPatientConsultation } from "../../../apis/apiComponents";
 import { ConsultationResponse } from "@/interfaces/consultations.interface";
 import CustomTable, { TableColumn } from "@/components/CustomTable";
@@ -12,13 +12,21 @@ import {
 import { BookConsultationForm } from "@/components/forms/BookConsultationForm";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { LoginOfficerResponseDto } from "../../../apis/apiSchemas";
+import { useRouter } from "next/navigation";
 
-interface OfficerTableResponse extends PatientTableResponse {
+interface OfficerTableResponse
+	extends Omit<PatientTableResponse, "healthFacility"> {
 	patientName: string;
 	patientEmail: string;
 }
 
 const ViewBookedConsultations = () => {
+	const router = useRouter();
+	const details = localStorage.getItem("details");
+	const user = details
+		? (JSON.parse(details) as { name: string; facilityName: string })
+		: null;
 	const [searchQuery, setSearchQuery] =
 		useState<SearchConsultationPayloadType | null>(null);
 	console.log("searchQuery", searchQuery);
@@ -57,7 +65,9 @@ const ViewBookedConsultations = () => {
 		{ key: "patientName", header: "Patient Name" },
 	];
 
-	console.log("data", data);
+	useEffect(() => {
+		if (!user) router.back();
+	}, [user]);
 
 	return (
 		<div className="w-full h-full">
@@ -66,18 +76,42 @@ const ViewBookedConsultations = () => {
 			) : (
 				<div>
 					<div className="py-6 px-6 flex justify-between">
-						<div className="flex items-center gap-x-3">
-							<SearchRecordsForm setSearchQuery={setSearchQuery} />
-							<Button variant={"ghost"} onClick={() => setSearchQuery(null)}>
-								Reset
-							</Button>
+						<Button
+							variant={"ghost"}
+							onClick={() => {
+								localStorage.removeItem("token");
+								localStorage.removeItem("details");
+								router.push("/");
+							}}
+						>
+							Sign Out
+						</Button>
+
+						<div className="flex items-center gap-x-4">
+							{user ? (
+								<div className="flex items-center gap-x-1">
+									<h3 className="text-xl font-semibold">{user.name + " | "}</h3>
+									<h3 className="text-xl font-semibold text-indigo-900">
+										{user.facilityName}
+									</h3>
+								</div>
+							) : undefined}
+							<BookConsultationForm />
 						</div>
-						<BookConsultationForm />
 					</div>
 					<div className="overflow-x-auto max-w-screen-2xl mx-auto mt-12">
-						<h1 className="text-center text-2xl">
-							List of Booked Consultations
-						</h1>
+						<div className="flex items-center">
+							<div className="flex items-center gap-x-3">
+								<SearchRecordsForm setSearchQuery={setSearchQuery} />
+								<Button variant={"ghost"} onClick={() => setSearchQuery(null)}>
+									Reset
+								</Button>
+							</div>
+							<h1 className="text-center text-2xl justify-self-center flex-1">
+								List of Booked Consultations
+							</h1>
+						</div>
+
 						<div className="my-5 w-auto mx-auto">
 							<CustomTable data={responseData} columns={columns} />
 						</div>

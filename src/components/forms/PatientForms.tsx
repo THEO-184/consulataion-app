@@ -43,7 +43,6 @@ export function PatientForm() {
 			},
 			{
 				onSuccess(data, variables, context) {
-					console.log("data", data);
 					localStorage.setItem("token", data.token);
 					localStorage.setItem(
 						"details",
